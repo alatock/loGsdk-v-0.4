@@ -1,0 +1,2 @@
+"C:\Users\Asus\Desktop\c++\loGsdk v 2.0\logbscd.py"
+"C:\Users\Asus\Desktop\c++\loGsdk v 2.0\assembly_compiller.py"

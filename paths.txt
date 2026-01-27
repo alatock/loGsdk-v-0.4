@@ -1,0 +1,4 @@
+"C:\Users\Asus\Desktop\c++\loGsdk v 2.0\execute.lbc.txt"
+"C:\Users\Asus\Desktop\c++\loGsdk v 2.0\dopfile.txt"
+"C:\Users\Asus\Desktop\c++\loGsdk v 2.0\execute.asm.txt"
+"C:\Users\Asus\Desktop\c++\loGsdk v 2.0\paths.txt"

@@ -1,0 +1,6 @@
+assig. r1 '9'
+ramw. "n" '5' &9
+ramw. "r" r1 &12
+    input "r" r2 P1
+    input "n" '16' P1
+halt.
