@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 
-ver= "4.0"
+ver= "1.0"
 
 
 def debug_procedure2(path_first, path_second):
