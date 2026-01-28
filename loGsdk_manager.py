@@ -2,10 +2,10 @@
 
 import subprocess
 import os
-import config as conf
+from pathlib import Path
 
 
-ver= "2.0"
+ver= "4.0"
 
 
 def debug_procedure2(path_first, path_second):
@@ -17,7 +17,7 @@ def debug_procedure2(path_first, path_second):
         return
     
     try:
-        subprocess.run(['python', path_first, path_way], check=True)
+        subprocess.run(['python', path_first], check=True)
         print("CPM: loGbasic -> assembly completed!")
     except subprocess.CalledProcessError as e:
         print(f"Ошибка выполнения первого файла: {e}")
@@ -32,7 +32,7 @@ def debug_procedure2(path_first, path_second):
         return
         
     try:
-        subprocess.run(['python', path_second, path_way], check=True)
+        subprocess.run(['python', path_second], check=True)
         print("CPM: assembly -> mashine_code completed!")
     except subprocess.CalledProcessError as e:
         print(f"Ошибка выполнения второго файла: {e}")
@@ -44,16 +44,10 @@ def debug_procedure2(path_first, path_second):
     print(f"CPM: sucsessfuly debug! v/{ver}")
 def clearfiles():
     print("clear loGlang file:")
-    with open (path_way, 'r', encoding='utf-8') as paths:
-         pathfold = paths.readlines()
-         inputfile = (pathfold[1].strip())
-         inputfile = inputfile.replace('\\', '/')
-         inputfile = inputfile.replace('"', '')
-         outputfile = (pathfold[2].strip())
-         outputfile = outputfile.replace('\\', '/')
-         outputfile = outputfile.replace('"', '')
+    inputfile = runfile / 'dopfile.txt'
     with open (inputfile, "w", encoding = 'utf-8') as clearfile1:
         pass
+    outputfile = runfile / 'execute.asm.txt'
     print("clear!")
     print("clear assembly file:")
     with open (outputfile, "w", encoding = 'utf-8') as clearfile2:
@@ -61,28 +55,15 @@ def clearfiles():
     print ("sucess!")
     pass
 
+runfile = Path(__file__).parent
+print (runfile)
 print (f"logsdk v {ver}")
 print ("loading compiller paths:")
-code_path = conf.path_progway
-code_path = code_path.replace('\\', '/')
-code_path= code_path.replace('"', "")
-print (code_path)
-with open (code_path, 'r', encoding='utf-8') as paths:
-        pathfold = paths.readlines()
-        inputfile = (pathfold[0].strip())
-        outputfile = (pathfold[1].strip())
-path_first = inputfile
-path_first = path_first.replace('\\', '/')
-path_first = path_first.replace('"', '')
+path_first = runfile / 'logbscd.py'
 print("\n Loglang compiller:",path_first)
-path_second = outputfile
-path_second = path_second.replace('\\', '/')
-path_second = path_second.replace('"', '')
+path_second = runfile / 'assembly_compiller.py'
 print("\n assembly compiller:",path_second)
-path_way = conf.path_folderway
-path_way = path_way.replace('\\', '/')
 
-print("\n folder file path:", path_way)
 print ("loading completed, press Y to start, r to crear code files(промежуточные)")
 start_button = input()
 

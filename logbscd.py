@@ -1,6 +1,8 @@
 import re
 import numpy
-import config as conf
+from pathlib import Path
+
+runfile = Path(__file__).parent
 
 line_number2 = 0
 a = False
@@ -13,9 +15,10 @@ modepattrn = r'"([a-z_]+)"'
 heshpattrn = r'#(\d+)'
 plusminpattern = r'([+,-]+)'
 ram_pattern = r'&(\d+)'
-pathfile = conf.path_folderway
-pathfile = pathfile.replace('\\', '/')
-print (pathfile)
+
+
+inputfile = runfile / 'execute.lbc.txt'
+outputfile = runfile / 'dopfile.txt'
 
 def outstr(main_str):
     with open (outputfile, 'a', encoding='utf-8') as outfile2:
@@ -26,14 +29,7 @@ def closestr():
             print("end (0)(0)(0)(0)", file=outfile2)
             print("[STP]", file=outfile2)
             pass
-with open (pathfile, 'r', encoding='utf-8') as paths:
-         pathfold = paths.readlines()
-         inputfile = (pathfold[0].strip())
-         inputfile = inputfile.replace('\\', '/')
-         inputfile = inputfile.replace('"', '')
-         outputfile = (pathfold[1].strip())
-         outputfile = outputfile.replace('\\', '/')
-         outputfile = outputfile.replace('"', '')
+
          
 with open (outputfile, 'a', encoding='utf-8') as outfile:
             print("sht (0)(0)(0)(0){SHIFT}", file=outfile, end= '\n')

@@ -1,3 +1,0 @@
-"C:\Users\Asus\Desktop\logsdk\loGsdk v 0.4\execute.lbc.txt"
-"C:\Users\Asus\Desktop\logsdk\loGsdk v 0.4\dopfile.txt"
-"C:\Users\Asus\Desktop\logsdk\loGsdk v 0.4\execute.asm.txt"

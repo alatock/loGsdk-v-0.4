@@ -1,2 +1,0 @@
-"C:\Users\Asus\Desktop\logsdk\loGsdk v 0.4\logbscd.py"
-"C:\Users\Asus\Desktop\logsdk\loGsdk v 0.4\assembly_compiller.py"

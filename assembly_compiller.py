@@ -1,5 +1,5 @@
 import re
-import config as conf
+from pathlib import Path
 symbols_to_remove = "[],"
 line_number = 0
 line_number2 = 0
@@ -8,16 +8,11 @@ zerosymbol = "0"
 fivesymbol = "5"
 justzero = "0"
 tabstr = 0
-folder_path = conf.path_folderway
-with open (folder_path, 'r', encoding='utf-8') as paths:
-         pathfold = paths.readlines()
-         inputfile = (pathfold[1].strip())
-         inputfile = inputfile.replace('\\', '/')
-         inputfile = inputfile.replace('"', '')
-         outputfile = (pathfold[2].strip())
-         outputfile = outputfile.replace('\\', '/')
-         outputfile = outputfile.replace('"', '')
-         print(inputfile)
+
+runfile = Path(__file__).parent
+
+inputfile = runfile / 'dopfile.txt'
+outputfile = runfile / 'execute.asm.txt'
  
 def tabinput(compiledopcode):
    with open (outputfile, 'a', encoding='utf-8') as outfile3:
