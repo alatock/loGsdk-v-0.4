@@ -12,7 +12,9 @@ brm с флагом число<0
 7)lrm-RAM>r1 |07|-|ram addr|r1|
 8)wrm-r1>RAM |08|-|ram addr|r1|
 0.4: 
-1) wnm - num->RAM (0)(0)(addr)('num')
+wnm - num->RAM (0)(0)(addr)('num')
+rlm - r1/>RAM->r2 (0)(r1)(r2)(0)
+rwm - r1->RAM</r2 (0)(0)(r2)(r1)
 
 9)orp-r1>O                  |09|-|r1|num port
 10)omp-RAM>O           addr2|0A|-|addr RAM|num port
