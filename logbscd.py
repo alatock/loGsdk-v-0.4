@@ -12,7 +12,7 @@ port_pattern = r'P(\d+)'
 freenumpatr = r"'([0-9_]+)'"
 symbols_to_remove = "[],"
 modepattrn = r'"([a-z_]+)"'
-heshpattrn = r'#(\d+)'
+heshpattrn = r'#([a-zA-Z0-9_]+)'
 plusminpattern = r'([+,-]+)'
 ram_pattern = r'&(\d+)'
 
@@ -197,23 +197,23 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",num_meta,")","(",reg1,")"]))
             if func_meta == "go":
                     opcode = "jmp"
-                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{","LB",label_meta,"}"]))
+                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{",label_meta,"}"]))
             if func_meta == "label":
                     opcode = "non"
-                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","[","LB",label_meta,"]"]))
+                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","[",label_meta,"]"]))
             if func_meta == "if":
                     if brh_meta == "=":
                             opcode = "brh"
                             reg1,reg2 = regmeta
-                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg2,")","(",reg1,")","{","LB",label_meta,"}"]))
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg2,")","(",reg1,")","{",label_meta,"}"]))
                     if brh_meta == "<":
                             opcode = "brm"
                             reg1,reg2 = regmeta
-                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg2,")","(",reg1,")","{","LB",label_meta,"}"]))
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg2,")","(",reg1,")","{",label_meta,"}"]))
                     if brh_meta == ">":
                             opcode = "brp"
                             reg1,reg2 = regmeta
-                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg2,")","(",reg1,")","{","LB",label_meta,"}"]))
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg2,")","(",reg1,")","{",label_meta,"}"]))
                     if brh_meta == "$":
                             opcode = "brn"
                             reg1 = regmeta
@@ -221,7 +221,7 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                             reg1 = reg1.replace('[', "")
                             reg1 = reg1.replace(']', "")
                             reg1 = reg1.replace("'", "")
-                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",num_meta,")","(",reg1,")","{","LB",label_meta,"}"]))
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",num_meta,")","(",reg1,")","{",label_meta,"}"]))
             if func_meta == "raml":
                     if mode_meta == "r":
                             opcode = "lrm"

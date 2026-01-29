@@ -1,12 +1,9 @@
-label. #1
-    assig. r1 '6'
-    ramw. "r" r1 &1
-    raml. "r" r2 &1
-    out. "r" r2 P5
-    ramw. "n" '4' &4
-    raml. "r" r3 &4
-    out. "r" r3 P5
-    ramw. "m" r1 r1
-    raml. "r" r3 &6
-    out. "r" r3 P5
+label. #main
+    assig. r2 '5'
+    label. #LOOP
+    if. r1 = r2 #end
+    mathr. "inc" r1 '1' r1
+    out. "r" r1 P5
+    go. #LOOP
+label. #end
 halt.
