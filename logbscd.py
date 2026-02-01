@@ -67,20 +67,13 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                         num_meta = num_meta.replace(']', "")
                         num_meta = num_meta.replace("'", "")
                         
-            if func_meta == "mathr":
-                        mode_meta = re.search(modepattrn, encstr2)
-                        mode_meta = {mode_meta.group(1)}
-                        mode_meta = str(mode_meta)
-                        mode_meta = mode_meta.replace('{', "")
-                        mode_meta = mode_meta.replace('}', "")
-                        mode_meta = mode_meta.replace("'", "")
             if func_meta == "math":
-                    operator_meta = re.search(plusminpattern, encstr2)
-                    operator_meta = {operator_meta.group(1)}
-                    operator_meta = str(operator_meta)
-                    operator_meta = operator_meta.replace('{', "")
-                    operator_meta = operator_meta.replace('}', "")
-                    operator_meta = operator_meta.replace("'", "")
+                    mode_meta = re.findall(modepattrn, encstr2)
+                    "".join(mode_meta)
+                    mode_meta = str(mode_meta)
+                    mode_meta = mode_meta.replace('[', "")
+                    mode_meta = mode_meta.replace(']', "")
+                    mode_meta = mode_meta.replace("'", "")
             if func_meta == "go":
                         label_meta = re.search(heshpattrn, encstr2)
                         label_meta = {label_meta.group(1)}
@@ -129,6 +122,7 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                         mode_meta = mode_meta.replace('{', "")
                         mode_meta = mode_meta.replace('}', "")
                         mode_meta = mode_meta.replace("'", "")
+
                         if mode_meta != "m":
                                     ram_meta = re.search(ram_pattern, encstr2)
                                     ram_meta = {ram_meta.group(1)}
@@ -180,21 +174,39 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                     opcode = "ldi"
                     main_str = "".join(map(str,[opcode," ","(",reg0,")","(",ldi_meta,")","(",num_meta,")","(",ldi_meta,")"]))
             if func_meta == "math":
-                    reg1, reg2, reg3 = regmeta
-                    if operator_meta == "+":
+                if mode_meta is not "":
+                    reg1 = regmeta
+                    reg1 = str(reg1)
+                    reg1 = reg1.replace('[', "")
+                    reg1 = reg1.replace(']', "")
+                    reg1 = reg1.replace("'", "")
+                    num_meta = re.search(freenumpatr, encstr2)
+                    num_meta = num_meta.group(1)
+                    num_meta = str(num_meta)
+                    num_meta = num_meta.replace('[', "")
+                    num_meta = num_meta.replace(']', "")
+                    num_meta = num_meta.replace("'", "")
+                    if mode_meta == "i":
+                            opcode = "adi"
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg1,")","(",num_meta,")","(",reg1,")"]))
+                    if mode_meta == "d":
+                            opcode = "sbi"
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg1,")","(",num_meta,")","(",reg1,")"]))
+                else:
+                        operator_meta = re.search(plusminpattern, encstr2)
+                        operator_meta = {operator_meta.group(1)}
+                        operator_meta = str(operator_meta)
+                        operator_meta = operator_meta.replace('{', "")
+                        operator_meta = operator_meta.replace('}', "")
+                        operator_meta = operator_meta.replace("'", "")
+                        reg1, reg2, reg3 = regmeta
+                        if operator_meta == "+":
                             opcode = "add"
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",reg2,")","(",reg1,")"]))
-                    if operator_meta == "-":
+                        if operator_meta == "-":
                             opcode = "sub"
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",reg2,")","(",reg1,")"]))
-            if func_meta == "mathr":
-                    reg1,reg3 = regmeta
-                    if mode_meta == "inc":
-                            opcode = "adi"
-                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",num_meta,")","(",reg1,")"]))
-                    if mode_meta == "dec":
-                            opcode = "sbi"
-                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",num_meta,")","(",reg1,")"]))
+
             if func_meta == "go":
                     opcode = "jmp"
                     main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{",label_meta,"}"]))

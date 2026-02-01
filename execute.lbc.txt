@@ -2,7 +2,8 @@ label. #main
     assig. r2 '5'
     label. #LOOP
     if. r1 = r2 #end
-    mathr. "inc" r1 '1' r1
+    math. "i" r1 '1'
+    math. r1 + r2 r3
     out. "r" r1 P5
     go. #LOOP
 label. #end
