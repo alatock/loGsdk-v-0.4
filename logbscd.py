@@ -13,7 +13,7 @@ freenumpatr = r"'([0-9_]+)'"
 symbols_to_remove = "[],"
 modepattrn = r'"([a-z_]+)"'
 heshpattrn = r'#([a-zA-Z0-9_]+)'
-plusminpattern = r'([+,-]+)'
+plusminpattern = r'([+,-,*,/]+)'
 ram_pattern = r'&(\d+)'
 
 
@@ -203,8 +203,14 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                         if operator_meta == "+":
                             opcode = "add"
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",reg2,")","(",reg1,")"]))
+                        if operator_meta == "*":
+                            opcode = "mul"
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",reg2,")","(",reg1,")"]))
                         if operator_meta == "-":
                             opcode = "sub"
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",reg2,")","(",reg1,")"]))
+                        if operator_meta == "/":
+                            opcode = "div"
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg3,")","(",reg2,")","(",reg1,")"]))
 
             if func_meta == "go":
