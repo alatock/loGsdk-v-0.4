@@ -1,8 +1,17 @@
 label. #main
-assig. r1 '2'
-assig. r2 '3' 
-math. r1 * r2 r3
-out. "r" r3 P5
-math. r1 / r2 r3
-out. "r" r3 P5
+assig. r1 '0'
+assig. r2 '100'
+assig. r3 '0'
+assig. r4 '0'
+label. #acii
+    input. "r" r3 P3
+    if. r3 $ '0' #acii
+    out. "r" r3 P3
+    out. "r" r3 P5
+    if. r3 $ '64' #print
+go. #acii
+label. #print
+    out. "n" '1' P2
+go. #end
+label. #end
 halt.

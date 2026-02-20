@@ -27,16 +27,17 @@ assig. r6 '30'
     math. r2 + r7 r2
     out. "r" r1 P1 / x cord -> cord_buff
     out. "r" r2 P2 / y cord -> cord_buff
-    out. "n" '1' P3
+    out. "n" '4' P3
     out. "r" r4 P5
-    if. r4 > r5 #end
+    if. r4 > r5 #move
     go. #LOOP
 label. #move
+    out. "n" '5' P3
     math. "i" r3 '1'
     out. "r" r3 P5
     assig. r4 '1001'
-    if. r3 > r6 #end
-    out. "n" '2' P3
+    if. r3 > r6 #main
+    out. "n" '6' P3
     go. #LOOP
 label. #end
 halt.
