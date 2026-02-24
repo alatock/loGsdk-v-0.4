@@ -216,6 +216,17 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
             if func_meta == "go":
                     opcode = "jmp"
                     main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{",label_meta,"}"]))
+
+            if func_meta == "global":
+                    opcode = "gmp"
+                    mode_meta = re.findall(modepattrn, encstr2)
+                    "".join(mode_meta)
+                    mode_meta = str(mode_meta)
+                    mode_meta = mode_meta.replace('[', "")
+                    mode_meta = mode_meta.replace(']', "")
+                    mode_meta = mode_meta.replace("'", "")
+                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{",mode_meta,"}"]))
+                    
             if func_meta == "label":
                     opcode = "non"
                     main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","[",label_meta,"]"]))
@@ -270,6 +281,12 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                             opcode = "rwm"
                             reg1, reg2 = regmeta
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg2,")","(",reg1,")"]))
+                    if mode_meta == "c":
+                            opcode = "wam"
+                            arr_symb = re.findall(r'\[(.*?)\]', encstr2)
+                            arr_symb = str(arr_symb)
+                            arr_symb = arr_symb.replace("'", '')
+                            main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",ram_meta,")","(0)",arr_symb]))
             if func_meta == "out":
                     if mode_meta == "r":
                             opcode = "orp"

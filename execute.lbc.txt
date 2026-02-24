@@ -1,17 +1,15 @@
 label. #main
-assig. r1 '0'
-assig. r2 '100'
+assig. r1 '11'
+assig. r2 '10'
 assig. r3 '0'
-assig. r4 '0'
-label. #acii
-    input. "r" r3 P3
-    if. r3 $ '0' #acii
+math. r2 + r1 r4
+ramw. "c" [104, 101, 108, 108, 111, 44, 32, 117, 115, 101, 114] &10
+label. #textout
+    raml. "m" r3 r2
     out. "r" r3 P3
-    out. "r" r3 P5
-    if. r3 $ '64' #print
-go. #acii
-label. #print
-    out. "n" '1' P2
-go. #end
+    math. "i" r2 '1'
+    if. r2 = r4 #end
+    go. #textout
 label. #end
+out. "n" '1' P2
 halt.
