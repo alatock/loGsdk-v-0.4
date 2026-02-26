@@ -1,0 +1,11 @@
+label. #main
+label. #textout
+    raml. "m" r3 r2
+    out. "r" r3 P3
+    math. "i" r2 '1'
+    if. r2 = r4 #end
+    go. #textout
+label. #end
+out. "n" '1' P2
+global. "main"
+halt.
