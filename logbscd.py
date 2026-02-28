@@ -9,11 +9,11 @@ a = False
 labels = numpy.zeros(60)
 pattern_a_multi = r'r(\d+)'
 port_pattern = r'P(\d+)'
-freenumpatr = r"'([0-9_]+)'"
+freenumpatr = r"'([0-9-_]+)'"
 symbols_to_remove = "[],"
 modepattrn = r'"([a-z._]+)"'
 heshpattrn = r'#([a-zA-Z0-9_]+)'
-plusminpattern = r'([+,-,*,/]+)'
+plusminpattern = r"[\,+\,-,\*/]"
 ram_pattern = r'&(\d+)'
 
 
@@ -193,8 +193,9 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                             opcode = "sbi"
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg1,")","(",num_meta,")","(",reg1,")"]))
                 else:
-                        operator_meta = re.search(plusminpattern, encstr2)
-                        operator_meta = {operator_meta.group(1)}
+                        operator_meta = re.search(r'[-+*/]', encstr2)
+                        if operator_meta:
+                              operator_meta = operator_meta.group() 
                         operator_meta = str(operator_meta)
                         operator_meta = operator_meta.replace('{', "")
                         operator_meta = operator_meta.replace('}', "")
