@@ -1,43 +1,25 @@
-label. #init
-    assig. r1 '5'       / XI (X начальный) 
-    assig. r2 '5'       / YI (Y начальный) 
-    assig. r3 '50'      / XII (X конечный) 
-    assig. r4 '30'      / YII (Y конечный) 
-    math. r3 - r1 r5    / 5 = XII - XI 
-    assig. r7 '1'        
-    if. r5 > r0 #calc_dy
-    math. r0 - r5 r5   
-    assig. r7 '-1'      / SX = -1 [cite: 24]
-label. #calc_dy
-    math. r4 - r2 r6    
-    assig. r8 '1'       / SY = 1 [cite: 24, 25]
-    if. r6 > r0 #calc_err
-    math. r0 - r6 r6   / 6 = -DY (делаем положительным)
-    assig. r8 '-1'      / SY = -1 [cite: 24]
-label. #calc_err
-    math. r5 - r6 r9    / 9 = E [cite: 25]
-label. #loop
-    out. "r" r1 P1      
-    out. "r" r2 P2      / Передаем YI в порт Y [cite: 14]
-    out. "n" '1' P3     / Рисуем (цвет 1) [cite: 14]
-    if. r1 = r3 #check_y
-    go. #continue_logic
-label. #check_y
-    if. r2 = r4 #end       / Если обе координаты совпали — выход [cite: 25, 27]
-label. #continue_logic
-    math. r9 + r9 r10   / 10 = E2 [cite: 25]
-    math. r0 - r6 r11  / 11 = -DY [cite: 25]
-    if. r10 > r11 #step_x
-    go. #check_step_y
-label. #step_x
-    math. r9 - r6 r9    / E = E - DY [cite: 27]
-    math. r1 + r7 r1    / XI = XI + SX [cite: 27]
-label. #check_step_y
-    if. r10 < r5 #step_y
-    go. #loop
-label. #step_y
-    math. r9 + r5 r9    / E = E + DX [cite: 26]
-    math. r2 + r8 r2    / YI = YI + SY [cite: 26]
-    go. #loop
+label. #main
+    label. #init
+    assig. r1 '0'
+    assig. r2 '0'
+    assig. r4 '0'
+        input. "r" r1 P3
+        out. "r" r1 P5
+    label. #wait
+        if. r4 $ '710' #ret
+        math. "i" r4 '1'
+        go. #wait
+    label. #ret
+        input. "r" r2 P3
+        if. r1 = r2 #write
+        assig. r4 '0'
+        go. #init
+    label. #write
+    transf. r2 r3
+    if. r3 $ '64' #end
+    out. "r" r3 P3
+    out. "r" r3 P5
+    go. #init
 label. #end
-    halt.
+    out. "n" '1' P2
+halt.

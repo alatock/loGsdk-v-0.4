@@ -227,7 +227,12 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                     mode_meta = mode_meta.replace(']', "")
                     mode_meta = mode_meta.replace("'", "")
                     main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{",mode_meta,"}"]))
-                    
+            if func_meta == "transf":
+                    reg1, reg2 = regmeta
+                    opcode = "mov"
+                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg2,")","(",reg0,")","(",reg1,")"]))
+
+
             if func_meta == "label":
                     opcode = "non"
                     main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","[",label_meta,"]"]))
