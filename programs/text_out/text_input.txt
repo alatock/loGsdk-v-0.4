@@ -4,6 +4,7 @@ label. #main
     transf. r0 r2
     label. #code
         input. "r" r1 P3
+        out. "r" r1 P5
         if. r1 $ '0' #init
         label. #loop
             input. "r" r2 P4
@@ -12,8 +13,9 @@ label. #main
     label. #write
     transf. r2 r3
     if. r3 $ '64' #end
-    if. r3 $ '0' #init
-    out. "r" r3 P4
+    out. "r" r3 P3
+    out. "r" r3 P5
     go. #init
 label. #end
+    out. "n" '1' P2
 halt.
