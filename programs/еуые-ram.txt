@@ -1,9 +1,0 @@
- ramw. "r" r1 &1
-    raml. "r" r2 &1
-    out. "r" r2 P5
-    ramw. "n" '4' &4
-    raml. "r" r3 &4
-    out. "r" r3 P5
-    ramw. "m" r1 r1
-    raml. "r" r3 &6
-    out. "r" r3 P5

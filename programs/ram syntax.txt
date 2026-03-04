@@ -1,8 +1,0 @@
-assig. r1 '9'
-raml. "r" r1 &3 
-raml. "m" r1 r3
-ramw. "n" '5' &6
-ramw. "r" r4 &3 
-ramw. "m" r1 r4 
-out. "m" &6 P2
-halt.

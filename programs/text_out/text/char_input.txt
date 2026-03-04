@@ -1,0 +1,19 @@
+label. #main
+    label. #init
+    transf. r0 r1
+    transf. r0 r2
+    label. #code
+        input. "r" r1 P3
+        if. r1 $ '0' #init
+        label. #loop
+            input. "r" r2 P4
+            if. r2 = r1 #write
+        go. #loop
+    label. #write
+    transf. r2 r3
+    if. r3 $ '64' #end
+    if. r3 $ '0' #init
+    out. "r" r3 P4
+    go. #init
+label. #end
+halt.
