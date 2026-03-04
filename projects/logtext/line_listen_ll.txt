@@ -1,0 +1,33 @@
+label. #main  r4 r5 r6 r7 r10
+transf. r4 r10
+    label. #init
+    transf. r0 r1
+    transf. r0 r2
+    label. #code
+        input. "r" r1 P3
+        if. r1 $ '0' #init
+        label. #loop
+            input. "r" r2 P4
+            if. r2 = r1 #write
+        go. #loop
+    label. #write
+    transf. r2 r3
+    if. r3 $ '13' #end
+    if. r3 $ '0' #init
+    out. "r" r3 P4
+    if. r3 $ '8' #del
+    transf. r5 r7
+    math. r7 + r10 r7
+    ramw. "m" r3 r7
+    math. "i" r5 '1'
+    go. #init
+    label. #del
+        if. r7 = r4 #init
+        math. "d" r5 '1'
+        transf. r5 r7
+        math. r7 + r10 r7
+        ramw. "m" r0 r7
+        go. #init
+label. #end
+global. "main"
+halt.
