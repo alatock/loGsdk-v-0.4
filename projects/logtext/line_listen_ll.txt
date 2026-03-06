@@ -23,10 +23,10 @@ transf. r4 r10
     go. #init
     label. #del
         if. r7 = r4 #init
-        math. "d" r5 '1'
-        transf. r5 r7
+        transf. r5 r7 
         math. r7 + r10 r7
         ramw. "m" r0 r7
+        math. "d" r5 '1'
         go. #init
 label. #end
 global. "main"

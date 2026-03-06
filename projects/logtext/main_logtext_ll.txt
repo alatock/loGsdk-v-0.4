@@ -27,12 +27,5 @@ label. #main
         out. "r" r2 P5
         global. "text_out_cl.txt"
         go. #init
-        label. #test
-            if. r11 = r1 #init
-            raml. "m" r12 r2
-            math. "i" r2 '1'
-            math. "i" r11 '1'
-            out. "r" r12 P5      
-        go. #test
 label. #break
 halt.
