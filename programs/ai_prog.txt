@@ -13,6 +13,8 @@ label. #next_row
     assig. r1 '0'      / Сбрасываем X
     math. "i" r2 '1'   / Y = Y + 1
     / Если Y достиг высоты экрана, начинаем сначала (зацикливаем)
-    if. r2 = r4 #main
+    if. r2 = r4 #break
     go. #draw_line     / Переходим к рисованию следующей строки
+label. #break
+global. 
 halt.

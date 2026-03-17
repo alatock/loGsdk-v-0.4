@@ -1,33 +1,36 @@
-label. #main  r4 r5 r6 r7 r10
-transf. r4 r10
+label. #main
+    ramw. "c" &10 [108, 111, 103, 116, 120, 116, 32, 98, 101, 116, 97] #c 10 по 21
+    assig. r1 '11' #кол во символов
+    assig. r2 '10' #адрес первого байта
+    global. "text_out_cl.txt"
     label. #init
-    transf. r0 r1
-    transf. r0 r2
-    label. #code
-        input. "r" r1 P3
-        if. r1 $ '0' #init
-        label. #loop
-            input. "r" r2 P4
-            if. r2 = r1 #write
+    ramw. "c" &10 [101, 110, 116, 101, 114, 32, 109, 111, 100, 101, 58] #c 10 по 21
+    assig. r1 '11' 
+    assig. r2 '10'
+    global. "text_out_cl.txt"
+    label. #loop
+        global. "char_listen_cl.txt"
+        if. r6 $ '49' #writefile
+        if. r6 $ '50' #readfile
+        if. r6 $ '51' #break
         go. #loop
-    label. #write
-    transf. r2 r3
-    if. r3 $ '13' #end
-    if. r3 $ '0' #init
-    out. "r" r3 P4
-    if. r3 $ '8' #del
-    transf. r5 r7
-    math. r7 + r10 r7
-    ramw. "m" r3 r7
-    math. "i" r5 '1'
-    go. #init
-    label. #del
-        if. r7 = r4 #init
-        transf. r5 r7 
-        math. r7 + r10 r7
-        ramw. "m" r0 r7
-        math. "d" r5 '1'
+    label. #writefile
+        ramw. "c" &10 [119, 114, 105, 116, 101, 32, 116,101, 120, 116, 32, 104, 101, 114, 101, 58]
+        assig. r1 '16'
+        assig. r2 '10'
+        global. "text_out_cl.txt"
+        assig. r4 '50'
+        assig. r5 '0'
+        global. "line_listen_cl.txt"
         go. #init
-label. #end
-global. "main"
+    label. #readfile
+        ramw. "c" &10 [114, 101, 97, 100, 105, 110, 103, 32, 116, 101, 120, 116, 58]
+        assig. r1 '13'
+        assig. r2 '10'
+        global. "text_out_cl.txt"
+        assig. "r" r2 '50'
+        transf. r5 r1
+        global. "text_out_cl.txt"
+        go. #init
+label. #break
 halt.
