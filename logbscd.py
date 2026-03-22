@@ -26,7 +26,6 @@ def outstr(main_str):
 def closestr():
          with open (outputfile, 'a', encoding='utf-8') as outfile2:
             print("hlt (0)(0)(0)(0)", file=outfile2)
-            print("end (0)(0)(0)(0)", file=outfile2)
             print("[STP]", file=outfile2)
             pass
 
@@ -219,6 +218,17 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                     main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{",label_meta,"}"]))
 
             if func_meta == "global":
+                    reg1 = regmeta
+                    reg1 = str(reg1)
+                    if reg1 != "[]":
+                            reg1 = reg1
+                            reg1 = str(reg1)
+                            reg1 = reg1.replace('[', "")
+                            reg1 = reg1.replace(']', "")
+                            reg1 = reg1.replace("'", "")
+
+                    else:
+                        reg1 = 0
                     opcode = "gmp"
                     mode_meta = re.findall(modepattrn, encstr2)
                     "".join(mode_meta)
@@ -226,7 +236,7 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                     mode_meta = mode_meta.replace('[', "")
                     mode_meta = mode_meta.replace(']', "")
                     mode_meta = mode_meta.replace("'", "")
-                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg0,")","{",mode_meta,"}"]))
+                    main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg0,")","(",reg0,")","(",reg1,")","{",mode_meta,"}"]))
             if func_meta == "transf":
                     reg1, reg2 = regmeta
                     opcode = "mov"

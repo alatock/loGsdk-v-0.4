@@ -1,43 +1,33 @@
-label. #main
-ramw. "n" '2' &1001
-ramw. "n" '2' &1002
-ramw. "n" '3' &1003
-ramw. "n" '3' &1004
-ramw. "n" '4' &1005
-ramw. "n" '4' &1006
-ramw. "n" '5' &1007
-ramw. "n" '3' &1008
-ramw. "n" '3' &1009
-ramw. "n" '5' &1010
-ramw. "n" '5' &1011
-ramw. "n" '5' &1012
-ramw. "n" '6' &1013
-ramw. "n" '6' &1014
-assig. r3 '36' регистр Rx
-assig. r7 '50' Ry
-assig. r4 '1001'
-assig. r5 '1014'
-assig. r6 '30'
+label. #main /<- изменяемые параметры
+ramw. "c" &10 [1, 1, 2, 2, 3, 3, 58]
+section. parent
+assig. r1 '10' / начальный адрес
+transf. r1 r3 значение тек.
+assig. r4 '1' /curr x coof
+assig. r5 '1' /curr y coof
+assig. r6 '0' содержимое
+assig. r7 '0' x out
+assig. r8 '0' y out
     label. #LOOP
-    raml. "m" r1 r4
-    math. "i" r4 '1'
-    raml. "m" r2 r4
-    math. "i" r4 '1'
-    math. r1 + r3 r1
-    math. r2 + r7 r2
-    out. "r" r1 P1 / x cord -> cord_buff
-    out. "r" r2 P2 / y cord -> cord_buff
-    out. "n" '4' P3
-    out. "r" r4 P5
-    if. r4 > r5 #move
-    go. #LOOP
-label. #move
-    out. "n" '5' P3
-    math. "i" r3 '1'
-    out. "r" r3 P5
-    assig. r4 '1001'
-    if. r3 > r6 #main
-    out. "n" '6' P3
-    go. #LOOP
+    xcord. block
+        raml. "m" r6 r3
+        out. "r" r6 P5
+        if. r6 $ '58' #end
+        math. r6 + r4 r7
+        out. "r" r7 P1
+        out. "r" r7 P5
+    ycord. block
+        math. "i" r3 '1'
+        raml. "m" r6 r3
+        out. "r" r6 P5
+        if. r6 $ '58' #end
+        math. r6 + r5 r8
+        out. "r" r8 P2
+        out. "r" r8 P5
+        math. "i" r3 '1'
+    outpt. block
+        out. "n" '4' P3
+        go. #LOOP
 label. #end
+    out. "n" '5' P3
 halt.
