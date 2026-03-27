@@ -1,4 +1,38 @@
-label. #main
-assig. r1 '1'
-    global. "dump" r1
+label. #main  r4 r5 r6 r7 r10 r4 = нач. адрес
+transf. r4 r10
+    label. #init
+    transf. r0 r1
+    transf. r0 r2
+    section. scan
+    label. #code
+        input. "r" r1 P3
+        if. r1 $ '0' #init
+        label. #loop
+            input. "r" r2 P4
+            if. r2 = r1 #write
+        go. #loop
+    section. smbwrite
+    label. #write
+    transf. r2 r3
+    if. r3 $ '13' #end
+    if. r3 $ '0' #init
+    out. "r" r3 P4
+    if. r3 $ '8' #del
+    transf. r5 r7
+    math. r7 + r10 r7
+    ramw. "m" r3 r7
+    math. "i" r5 '1'
+    go. #init
+    label. #del
+        if. r7 = r4 #init
+        transf. r5 r7 
+        math. r7 + r10 r7
+        ramw. "m" r0 r7
+        math. "d" r5 '1'
+        go. #init
+label. #end
+    assig. r3 '3'
+    math. "i" r7 '1'
+    ramw. "m" r3 r7
+global. "return"
 halt.

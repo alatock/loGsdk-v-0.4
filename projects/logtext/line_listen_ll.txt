@@ -1,8 +1,9 @@
-label. #main  r4 r5 r6 r7 r10
+label. #main  r4 r5 r6 r7 r10 r4 = нач. адрес
 transf. r4 r10
     label. #init
     transf. r0 r1
     transf. r0 r2
+    section. scan
     label. #code
         input. "r" r1 P3
         if. r1 $ '0' #init
@@ -10,6 +11,7 @@ transf. r4 r10
             input. "r" r2 P4
             if. r2 = r1 #write
         go. #loop
+    section. smbwrite
     label. #write
     transf. r2 r3
     if. r3 $ '13' #end
@@ -29,5 +31,8 @@ transf. r4 r10
         math. "d" r5 '1'
         go. #init
 label. #end
-global. "main"
+    assig. r3 '3'
+    math. "i" r7 '1'
+    ramw. "m" r3 r7
+global. "return"
 halt.

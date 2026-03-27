@@ -17,5 +17,5 @@ label. #main
     transf. r3 r6
     go. #init
 label. #end
-global. "main"
+global. "return"
 halt.

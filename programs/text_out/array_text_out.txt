@@ -1,0 +1,13 @@
+label. #main
+label. #textout
+    raml. "m" r3 r2
+    if. r3 $ '3' #end 
+    out. "r" r3 P3
+    math. "i" r2 '1'
+    go. #textout
+label. #end
+out. "n" '1' P2
+global. "return"
+halt.
+регистры: r2 = адрес строки изм.
+          r3 = регистр для аски текущего симола
