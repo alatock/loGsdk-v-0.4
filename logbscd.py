@@ -65,7 +65,7 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                         num_meta = num_meta.replace('[', "")
                         num_meta = num_meta.replace(']', "")
                         num_meta = num_meta.replace("'", "")
-                        
+                    
             if func_meta == "math":
                     mode_meta = re.findall(modepattrn, encstr2)
                     "".join(mode_meta)
@@ -329,7 +329,8 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                             reg1 = reg1.replace("'", "")
                             main_str = "".join(map(str,[opcode," ","(",reg0,")","(",reg1,")","(",reg0,")","(",port_meta,")"]))
                             pass
-                
+            if func_meta == "section":
+                    None
             print(main_str)
             outstr(main_str)
             line_number2 += 1

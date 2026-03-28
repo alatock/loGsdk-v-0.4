@@ -1,38 +1,33 @@
-label. #main  r4 r5 r6 r7 r10 r4 = нач. адрес
-transf. r4 r10
-    label. #init
-    transf. r0 r1
-    transf. r0 r2
-    section. scan
-    label. #code
-        input. "r" r1 P3
-        if. r1 $ '0' #init
-        label. #loop
-            input. "r" r2 P4
-            if. r2 = r1 #write
+section. data
+label. #main
+    label. #loop
+        raml. "r" r2 &200 / адрес хранения кол во выполнений программы
+        if. r2 $ '40' #end
+        transf. r0 r2
+        ramw. "c" &10 [1,1,2,1,3,1,4,1,5,1,1,5,2,5,3,5,4,5,5,5,58]
+        assig. r1 '10'
+        out. "n" '6' P3
+        global. "sprite_render.txt"
+        label. #lp2
+            math. "i" r13 '1'
+            if. r13 $ '5000' #lp2nd
+            go. #lp2
+        label. #lp2nd
+        out. "n" '6' P3
+        transf. r0 r6
+        transf. r0 r13
+        ramw. "c" &60 [1,1,1,2,1,3,1,4,1,5,5,1,5,2,5,3,5,4,5,5,58]
+        assig. r1 '60'
+        global. "sprite_render.txt"
+        raml. "r" r2 &200
+        math. "i" r2 '1'
+        ramw. "r" r2 &200
+         label. #lp3
+            math. "i" r13 '1'
+            if. r13 $ '5000' #lp3nd
+            go. #lp3
+        label. #lp3nd
+        transf. r0 r13
         go. #loop
-    section. smbwrite
-    label. #write
-    transf. r2 r3
-    if. r3 $ '13' #end
-    if. r3 $ '0' #init
-    out. "r" r3 P4
-    if. r3 $ '8' #del
-    transf. r5 r7
-    math. r7 + r10 r7
-    ramw. "m" r3 r7
-    math. "i" r5 '1'
-    go. #init
-    label. #del
-        if. r7 = r4 #init
-        transf. r5 r7 
-        math. r7 + r10 r7
-        ramw. "m" r0 r7
-        math. "d" r5 '1'
-        go. #init
 label. #end
-    assig. r3 '3'
-    math. "i" r7 '1'
-    ramw. "m" r3 r7
-global. "return"
 halt.
