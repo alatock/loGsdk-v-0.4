@@ -20,6 +20,9 @@ ram_pattern = r'&(\d+)'
 inputfile = runfile / 'execute.lbc.txt'
 outputfile = runfile / 'dopfile.txt'
 
+with open (outputfile, 'w+', encoding='utf-8') as outfile2:
+        pass
+
 def outstr(main_str):
     with open (outputfile, 'a', encoding='utf-8') as outfile2:
             print(main_str, file=outfile2)
@@ -32,10 +35,9 @@ def closestr():
          
 with open (outputfile, 'a', encoding='utf-8') as outfile:
             print("sht (0)(0)(0)(0){SHIFT}", file=outfile, end= '\n')
-            print("crg (0)(0)(0)(0)", file=outfile)
+            #print("crg (0)(0)(0)(0)", file=outfile) бывшая команда для отчищения регистров,  перекачивала ещё со времён эмулятора logisim
             m_str = "".join(map(str,["sht"," ","(",0,")","(",0,")","(",0,")","(",0,")","{","SHIFT","}"]))
             print(m_str)
-            print("crg (0)(0)(0)(0)")
 
 with open(inputfile, 'r', encoding='utf-8') as file3:
         lines = file3.readlines()
