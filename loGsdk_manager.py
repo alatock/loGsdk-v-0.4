@@ -1,83 +1,77 @@
+import pygame
+import numpy as np
+import threading
+import time
 
+fps = 100
+class PixelWindow:
+    def __init__(self, width, height, scale=10, title="Pixel Window", fps=100):
+        pygame.init()
+        self.width = width
+        self.height = height
+        self.scale = scale
+        self.fps = fps
 
-import subprocess
-import os
-from pathlib import Path
+        self.screen = pygame.display.set_mode((width*scale, height*scale))
+        pygame.display.set_caption(title)
 
+        self.surface = pygame.Surface((width, height))
+        self.clock = pygame.time.Clock()
 
-ver= "1.0"
+        # черно-белая матрица (0=черный, 1=белый)
+        self.matrix = np.zeros((height, width), dtype=np.uint8)
+        self.running = True
+        self._lock = threading.Lock()
 
+        # поток без daemon
+        self.thread = threading.Thread(target=self.loop, daemon=False)
+        self.thread.start()
 
-def debug_procedure2(path_first, path_second):
-    print("CPM: debug process run")
-    
-    # Проверяем существование первого файла
-    if not os.path.exists(path_first):
-        print(f"Ошибка: файл 1 {path_first} не найден")
-        return
-    
-    try:
-        subprocess.run(['python', path_first], check=True)
-        print("CPM: loGbasic -> assembly completed!")
-    except subprocess.CalledProcessError as e:
-        print(f"Ошибка выполнения первого файла: {e}")
-        return
-    except Exception as e:
-        print(f"Неожиданная ошибка при запуске первого файла: {e}")
-        return
-    
-    # Проверяем существование второго файла
-    if not os.path.exists(path_second):
-        print(f"Ошибка: файл 2 {path_second} не найден")
-        return
-        
-    try:
-        subprocess.run(['python', path_second], check=True)
-        print("CPM: assembly -> mashine_code completed!")
-    except subprocess.CalledProcessError as e:
-        print(f"Ошибка выполнения второго файла: {e}")
-        return
-    except Exception as e:
-        print(f"Неожиданная ошибка при запуске второго файла: {e}")
-        return
-    
-    print(f"CPM: sucsessfuly debug! v/{ver}")
-def clearfiles():
-    print("clear loGlang file:")
-    inputfile = runfile / 'dopfile.txt'
-    with open (inputfile, "w", encoding = 'utf-8') as clearfile1:
-        pass
-    outputfile = runfile / 'execute.asm.txt'
-    print("clear!")
-    print("clear assembly file:")
-    with open (outputfile, "w", encoding = 'utf-8') as clearfile2:
-        pass
-    print ("sucess!")
-    pass
+    def update_display(self):
+      """Метод для вызова в ГЛАВНОМ потоке"""
+      for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+              self.running = False
+      with self._lock:
+          rgb_matrix = np.stack([self.matrix.T * 255] * 3, axis=-1)
+          pygame.surfarray.blit_array(self.surface, rgb_matrix)
+      scaled = pygame.transform.scale(
+          self.surface,
+          (self.width * self.scale, self.height * self.scale)
+      )
+      self.screen.blit(scaled, (0, 0))
+      pygame.display.flip()
+   
 
-runfile = Path(__file__).parent
-print (runfile)
-print (f"logsdk v {ver}")
-print ("loading compiller paths:")
-path_first = runfile / 'logbscd.py'
-print("\n Loglang compiller:",path_first)
-path_second = runfile / 'assembly_compiller.py'
-print("\n assembly compiller:",path_second)
+    def set_pixel(self, x, y, value):
+        """
+        Установить один пиксель
+        value: 0 или 1
+        """
+        if 0 <= x < self.width and 0 <= y < self.height:
+            with self._lock:
+                self.matrix[y, x] = 1 if value else 0
+        else:
+            raise ValueError("Координаты за пределами матрицы")
 
-print ("loading completed, press Y to start, r to crear code files(промежуточные)")
-start_button = input()
+    def fill(self, value):
+        """Залить весь экран 0 или 1"""
+        with self._lock:
+            self.matrix[:, :] = 1 if value else 0
 
-if start_button == "y":
-    print("clear cash files:\n")
-    clearfiles()
-    debug_procedure2(path_first, path_second)
-if start_button == "r":
-    print("вы точно хотите отчистить все промежуточные файлы? y/n")
-    input1 = input()
-    if input1 == "y":
-        clearfiles()
-    if input1 == "n":
-        pass
-     
+    def loop(self):
+       print("run: loop")      
+       while self.running:
+           for event in pygame.event.get():
+               if event.type == pygame.QUIT:
+                   print("run: exit")
+                   self.running = False
+                   # self.close()      
+           self.update_display()  # обновляем экран каждый кадр
+           self.clock.tick(self.fps)      
+       pygame.quit()
 
-
+    def close(self):
+        """Закрыть окно корректно"""
+        self.running = False
+        self.thread.join()
