@@ -43,7 +43,15 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
         lines = file3.readlines()
         while a == False:
             encstr2 = (lines[line_number2].strip())
-            func_meta = re.search(r'(\w+)(?=.)', encstr2)
+            
+            # Проверяем, начинается ли строка с ;
+            if encstr2.startswith(';') or encstr2 == '':
+                line_number2 += 1
+                if line_number2 >= len(lines):
+                    break
+                continue
+            
+            func_meta = re.search(r'(\w+;?\w*)(?=.)', encstr2)
             func_meta = {func_meta.group(1)}
             func_meta = str(func_meta)
             func_meta = func_meta.replace('{', "")
@@ -165,6 +173,8 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
             reg1 = 0
             reg2 = 0
             reg3 = 0
+
+                    
             if func_meta == "assig":
                     ldi_meta = re.search(pattern_a_multi, encstr2)
                     ldi_meta = {ldi_meta.group(1)}
@@ -333,6 +343,8 @@ with open(inputfile, 'r', encoding='utf-8') as file3:
                             pass
             if func_meta == "section":
                     None
+            if func_meta == ";":
+                    main_str = ""
             print(main_str)
             outstr(main_str)
             line_number2 += 1

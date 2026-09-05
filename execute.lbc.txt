@@ -1,7 +1,79 @@
-section. data
+; ========================================
+; 3D CUBE - Simplified Version
+; ========================================
+; Управление: любая клавиша для вращения
+; ========================================
+
 label. #main
-ramw. "c" &12000 [,3] #text1 12000
-ramw. "c" &12100 [,3] text2 12100
-ramw. "c" &12200 [,3] text3 12200
-section. code
-.halt
+    ; Очистка экрана
+    out. "n" '2' P3
+    
+    ; Тестовый вывод - рисуем простой квадрат в центре
+    ; Точка 1 (20, 20)
+    out. "n" '20' P1
+    out. "n" '20' P2
+    out. "n" '4' P3
+    
+    ; Точка 2 (40, 20)
+    out. "n" '40' P1
+    out. "n" '20' P2
+    out. "n" '4' P3
+    
+    ; Точка 3 (40, 40)
+    out. "n" '40' P1
+    out. "n" '40' P2
+    out. "n" '4' P3
+    
+    ; Точка 4 (20, 40)
+    out. "n" '20' P1
+    out. "n" '40' P2
+    out. "n" '4' P3
+    
+    ; Рисуем линию между точками
+    assig. r1 '20'
+    label. #line1
+        out. "r" r1 P1
+        out. "n" '20' P2
+        out. "n" '4' P3
+        math. "i" r1 '1'
+        if. r1 $ '41' #line1_done
+        go. #line1
+    label. #line1_done
+    
+    assig. r1 '20'
+    label. #line2
+        out. "r" r1 P1
+        out. "n" '40' P2
+        out. "n" '4' P3
+        math. "i" r1 '1'
+        if. r1 $ '41' #line2_done
+        go. #line2
+    label. #line2_done
+    
+    assig. r2 '20'
+    label. #line3
+        out. "n" '20' P1
+        out. "r" r2 P2
+        out. "n" '4' P3
+        math. "i" r2 '1'
+        if. r2 $ '41' #line3_done
+        go. #line3
+    label. #line3_done
+    
+    assig. r2 '20'
+    label. #line4
+        out. "n" '40' P1
+        out. "r" r2 P2
+        out. "n" '4' P3
+        math. "i" r2 '1'
+        if. r2 $ '41' #line4_done
+        go. #line4
+    label. #line4_done
+    
+    ; Отображаем буфер
+    out. "n" '5' P3
+    
+    ; Ждём нажатия
+    global. "char_listen_cl.txt"
+
+halt.

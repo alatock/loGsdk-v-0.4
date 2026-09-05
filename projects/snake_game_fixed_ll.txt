@@ -1,0 +1,325 @@
+; ========================================
+; SNAKE GAME for loGlang
+; ========================================
+; Управление: W(119) A(97) S(115) D(100)
+; Скорость: 100 МГц
+; 
+; Карта памяти:
+; &100 - голова X
+; &101 - голова Y  
+; &102 - направление (1=вверх, 2=вниз, 3=влево, 4=вправо)
+; &103 - яблоко X
+; &104 - яблоко Y
+; &105 - счёт
+; &106 - индекс начала тела (head pointer)
+; &107 - индекс конца тела (tail pointer)
+; &200-&400 - тело змейки (пары X,Y)
+; ========================================
+
+label. #main
+    ; ========== СТАРТОВЫЙ ЭКРАН ==========
+    out. "n" '6' P3
+    
+    ; Выводим "SNAKE GAME"
+    ramw. "c" &10 [83, 78, 65, 75, 69, 32, 71, 65, 77, 69, 3]
+    assig. r2 '10'
+    global. "text_out_cl.txt"
+    
+    ; Выводим "PRESS ANY KEY"
+    ramw. "c" &10 [80, 82, 69, 83, 83, 32, 65, 78, 89, 32, 75, 69, 89, 3]
+    assig. r2 '10'
+    global. "text_out_cl.txt"
+    
+    ; Ждём нажатия клавиши
+    global. "char_listen_cl.txt"
+    
+    ; Инициализация
+    ramw. "c" &100 [32, 32, 4, 10, 10, 0, 0, 0]
+    
+    ; Инициализируем тело змейки (начальные 3 сегмента)
+    ramw. "c" &200 [30, 32, 31, 32, 32, 32]
+    
+    ; Очистка экрана
+    out. "n" '6' P3
+    
+    ; Отрисовка первого яблока
+    raml. "r" r1 &103
+    raml. "r" r2 &104
+    out. "r" r1 P1
+    out. "r" r2 P2
+    out. "n" '4' P3
+    out. "n" '5' P3
+    
+label. #game_loop
+    ; ========== ВВОД УПРАВЛЕНИЯ ==========
+    input. "r" r10 P4
+    
+    ; ОТЛАДКА: Выводим код клавиши
+    out. "r" r10 P5
+    
+    if. r10 $ '0' #skip_input
+    
+   ; W = 119 (вверх)
+    if. r10 $ '97' #set_up
+    ; S = 115 (вниз)
+    if. r10 $ '100' #set_down
+    ; A = 97 (влево)
+    if. r10 $ '119' #set_left
+    ; D = 100 (вправо)
+    if. r10 $ '115' #set_right
+    go. #skip_input
+    
+    label. #set_up
+        ramw. "n" '1' &102
+        go. #skip_input
+    label. #set_down
+        ramw. "n" '2' &102
+        go. #skip_input
+    label. #set_left
+        ramw. "n" '3' &102
+        go. #skip_input
+    label. #set_right
+        ramw. "n" '4' &102
+    
+label. #skip_input
+    ; ========== ДВИЖЕНИЕ ==========
+    ; Загружаем текущую позицию
+    raml. "r" r1 &100  ; X головы
+    raml. "r" r2 &101  ; Y головы
+    raml. "r" r3 &102  ; направление
+    
+    ; Сохраняем старую позицию головы
+    transf. r1 r11
+    transf. r2 r12
+    
+    ; Двигаем голову по направлению
+    if. r3 $ '1' #move_up
+    if. r3 $ '2' #move_down
+    if. r3 $ '3' #move_left
+    if. r3 $ '4' #move_right
+    
+    label. #move_up
+        math. "d" r2 '1'
+        if. r2 $ '0' #game_over  ; выход за границу
+        go. #after_move
+    label. #move_down
+        math. "i" r2 '1'
+        if. r2 $ '65' #game_over  ; выход за границу
+        go. #after_move
+    label. #move_left
+        math. "d" r1 '1'
+        if. r1 $ '0' #game_over
+        go. #after_move
+    label. #move_right
+        math. "i" r1 '1'
+        if. r1 $ '65' #game_over
+    
+label. #after_move
+    ; Сохраняем новую позицию головы
+    ramw. "r" r1 &100
+    ramw. "r" r2 &101
+    
+    ; ========== ПРОВЕРКА СТОЛКНОВЕНИЯ С ТЕЛОМ ==========
+    raml. "r" r22 &107  ; индекс хвоста (начало)
+    raml. "r" r23 &106  ; индекс головы (конец)
+    
+    label. #collision_check_loop
+        ; Проверяем, дошли ли до головы
+        if. r22 = r23 #collision_check_done
+        
+        ; Вычисляем адрес текущего сегмента
+        assig. r24 '200'
+        math. r24 + r22 r24
+        
+        ; Загружаем X координату сегмента
+        raml. "m" r25 r24
+        
+        ; Загружаем Y координату сегмента
+        math. "i" r24 '1'
+        raml. "m" r26 r24
+        
+        ; Проверяем совпадение с головой
+        if. r1 = r25 #check_collision_y
+        go. #continue_collision_check
+        
+        label. #check_collision_y
+            if. r2 = r26 #game_over
+        
+        label. #continue_collision_check
+        ; Переходим к следующему сегменту
+        math. "i" r22 '2'
+        
+        ; Проверяем переполнение
+        if. r22 $ '200' #wrap_collision_ptr
+        go. #collision_check_loop
+        
+        label. #wrap_collision_ptr
+            assig. r22 '0'
+            go. #collision_check_loop
+    
+    label. #collision_check_done
+    
+    ; ========== ОБНОВЛЕНИЕ ТЕЛА ==========
+    ; Получаем индекс головы
+    raml. "r" r14 &106
+    
+    ; Вычисляем адрес для записи новой позиции головы
+    assig. r15 '200'
+    math. r15 + r14 r15
+    
+    ; Записываем новую позицию головы в массив тела
+    ramw. "m" r1 r15
+    math. "i" r15 '1'
+    ramw. "m" r2 r15
+    
+    ; Сдвигаем указатель головы на 2 (X и Y)
+    math. "i" r14 '2'
+    
+    ; Проверяем переполнение (если >= 200, сбрасываем в 0)
+    if. r14 $ '200' #reset_head_ptr
+    go. #save_head_ptr
+    
+    label. #reset_head_ptr
+        assig. r14 '0'
+    
+    label. #save_head_ptr
+        ramw. "r" r14 &106
+    
+    ; ========== ПРОВЕРКА ЯБЛОКА ==========
+    raml. "r" r4 &103  ; яблоко X
+    raml. "r" r5 &104  ; яблоко Y
+    
+    if. r1 = r4 #check_apple_y
+    go. #no_apple
+    
+    label. #check_apple_y
+        if. r2 = r5 #eat_apple
+    
+label. #no_apple
+    ; Не съели яблоко - удаляем хвост
+    raml. "r" r16 &107  ; индекс хвоста
+    math. "i" r16 '2'   ; сдвигаем хвост на 2
+    
+    ; Проверяем переполнение хвоста
+    if. r16 $ '200' #reset_tail_ptr
+    go. #save_tail_ptr
+    
+    label. #reset_tail_ptr
+        assig. r16 '0'
+    
+    label. #save_tail_ptr
+        ramw. "r" r16 &107
+    
+    go. #draw_snake
+    
+label. #eat_apple
+    ; Увеличиваем счёт
+    raml. "r" r6 &105
+    math. "i" r6 '1'
+    ramw. "r" r6 &105
+    
+    ; Выводим счёт в консоль
+    out. "r" r6 P5
+    
+    ; НЕ удаляем хвост (змейка растёт)
+    
+    ; Генерируем новое яблоко (упрощённо)
+    raml. "r" r8 &103
+    math. "i" r8 '7'
+    if. r8 $ '60' #apple_ok
+    assig. r8 '10'
+    label. #apple_ok
+    ramw. "r" r8 &103
+    
+    raml. "r" r9 &104
+    math. "i" r9 '5'
+    if. r9 $ '60' #apple_ok2
+    assig. r9 '10'
+    label. #apple_ok2
+    ramw. "r" r9 &104
+    
+    ; Рисуем новое яблоко
+    out. "r" r8 P1
+    out. "r" r9 P2
+    out. "n" '4' P3
+    out. "n" '5' P3
+    
+    go. #draw_snake
+
+label. #draw_snake
+    ; ========== ОТРИСОВКА ==========
+    ; Очистка экрана
+    out. "n" '6' P3
+    
+    ; ========== РИСУЕМ ТЕЛО ЗМЕЙКИ ==========
+    raml. "r" r17 &107  ; индекс хвоста (начало)
+    raml. "r" r18 &106  ; индекс головы (конец)
+    
+    label. #draw_body_loop
+        ; Проверяем, дошли ли до головы
+        if. r17 = r18 #draw_body_done
+        
+        ; Вычисляем адрес текущего сегмента
+        assig. r19 '200'
+        math. r19 + r17 r19
+        
+        ; Загружаем X координату
+        raml. "m" r20 r19
+        
+        ; Загружаем Y координату
+        math. "i" r19 '1'
+        raml. "m" r21 r19
+        
+        ; Рисуем сегмент
+        out. "r" r20 P1
+        out. "r" r21 P2
+        out. "n" '4' P3
+        
+        ; Переходим к следующему сегменту (сдвиг на 2)
+        math. "i" r17 '2'
+        
+        ; Проверяем переполнение
+        if. r17 $ '200' #wrap_body_ptr
+        go. #draw_body_loop
+        
+        label. #wrap_body_ptr
+            assig. r17 '0'
+            go. #draw_body_loop
+    
+    label. #draw_body_done
+    
+    ; Рисуем голову
+    raml. "r" r1 &100
+    raml. "r" r2 &101
+    out. "r" r1 P1
+    out. "r" r2 P2
+    out. "n" '4' P3
+    
+    ; Рисуем яблоко
+    raml. "r" r4 &103
+    raml. "r" r5 &104
+    out. "r" r4 P1
+    out. "r" r5 P2
+    out. "n" '4' P3
+    
+    ; Завершение отрисовки
+    out. "n" '5' P3
+    
+    ; ========== ЗАДЕРЖКА ==========
+    transf. r0 r13
+    label. #delay_loop
+        math. "i" r13 '1'
+        if. r13 $ '40000' #delay_end
+        go. #delay_loop
+    label. #delay_end
+    
+    ; Продолжаем игру
+    go. #game_loop
+
+label. #game_over
+    ; Выводим финальный счёт
+    raml. "r" r6 &105
+    out. "r" r6 P5
+    out. "n" '6' P3
+    
+halt.
